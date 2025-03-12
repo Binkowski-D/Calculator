@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AddOperationTest {
 
-    AddOperation addOperation;
+    private AddOperation addOperation;
 
     @BeforeEach
     public void setUp (){
@@ -16,21 +16,21 @@ public class AddOperationTest {
     }
 
     @Test
-    public void zeroAdditionTest(){
+    public void testZeroAddition(){
         BigDecimal result = addOperation.execute(new BigDecimal("5"), new BigDecimal("0"));
-        assertEquals(new BigDecimal("5"), result, "5 + 0 should give 5");
+        assertEquals(0, result.compareTo(new BigDecimal("5")), "5 + 0 should give 5");
     }
 
     @Test
     public void testAdditionWithNegativeNumber(){
         BigDecimal result = addOperation.execute(new BigDecimal("5"), new BigDecimal("-3"));
-        assertEquals(new BigDecimal("2"), result, "5 + -3 should give 2");
+        assertEquals(0, result.compareTo(new BigDecimal("2")), "5 + (-3) should give 2");
     }
 
     @Test
     public void testAdditionWithNegativeResult(){
         BigDecimal result = addOperation.execute(new BigDecimal("2"), new BigDecimal("-19"));
-        assertEquals(new BigDecimal("-17"), result, "2 + -19 should give -17");
+        assertEquals(0, result.compareTo(new BigDecimal("-17")), "2 + (-19) should give -17");
     }
 
 }

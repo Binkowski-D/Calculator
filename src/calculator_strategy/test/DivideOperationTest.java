@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DivideOperationTest {
 
-    DivideOperation divideOperation;
+    private DivideOperation divideOperation;
 
     @BeforeEach
     public void setUp(){
@@ -19,19 +19,23 @@ public class DivideOperationTest {
     @Test
     public void testOfDivisionByOne(){
         BigDecimal result = divideOperation.execute(new BigDecimal("5"), BigDecimal.ONE);
-        assertEquals(new BigDecimal("5"), result, "5 / 1 should give 5");
+        assertEquals(0, result.compareTo(new BigDecimal("5.00")), "5 / 1 should give 5.00");
     }
 
     @Test
     public void testOfDivisionByZero(){
-        assertThrows(ArithmeticException.class, () -> divideOperation.execute(new BigDecimal("5"), BigDecimal.ZERO), "Do not divide by 0");
+        assertThrows(ArithmeticException.class, () -> divideOperation.execute(new BigDecimal("5"), BigDecimal.ZERO),
+                "Do not divide by 0");
     }
 
 
-//    @Test
-//    public void testOfDivisionByZeroWithMessage(){
-//        ArithmeticException exception = assertThrows(ArithmeticException.class, () -> divideOperation.execute(new BigDecimal("5"), BigDecimal.ZERO));
-//        assertEquals("Do not divide by 0", exception.getMessage(), "The exception message should be : 'Do not divide by 0'");
-//    }
+   @Test
+   public void testOfDivisionByZeroWithMessage(){
+       ArithmeticException exception = assertThrows(ArithmeticException.class,
+               () -> divideOperation.execute(new BigDecimal("5"), BigDecimal.ZERO));
+
+       assertEquals("Do not divide by 0", exception.getMessage(),
+               "The exception message should be 'Do not divide by 0'");
+   }
 
 }

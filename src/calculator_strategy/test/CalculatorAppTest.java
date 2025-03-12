@@ -7,49 +7,48 @@ import org.junit.jupiter.api.AfterEach;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CalculatorAppTest {
 
-    String filePath;
+    private static final String BASE_PATH = "src/calculator_strategy/test/resources/";
+    private final List<Path> createdFiles = new ArrayList<>();
 
     @BeforeEach
-    public void setUp(){
-        filePath = "src/calculator_strategy/test/resources/";
+    public void setUp() throws  IOException {
+        Files.createDirectories(Paths.get(BASE_PATH));
     }
 
-//    @AfterEach
-//    public void tearDown() {
-//        try {
-//            Files.deleteIfExists(Paths.get(filePath));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    @Test
-    public void invalidDataTest(){
-        filePath += "invalid_data.txt";
-
-        try{
-            Files.writeString(Paths.get(filePath), "apply add", StandardCharsets.UTF_8);
-        }catch(IOException ex){
-            ex.printStackTrace();
+    @AfterEach
+    public void tearDown() throws IOException {
+        for (Path file : createdFiles) {
+            Files.deleteIfExists(file);
         }
-
-        assertThrows(NumberFormatException.class, () -> CalculatorApp.processFile(filePath), "Expected NumberFormatException for invalid number format");
+        createdFiles.clear();
     }
 
     @Test
-    public void invalidOperationTest(){
-        filePath += "invalid_operation.txt";
-        try{
-            Files.writeString(Paths.get(filePath), "adddddd 125", StandardCharsets.UTF_8);
-        }catch (IOException ex){
-            ex.printStackTrace();
-        }
+    public void testInvalidData() throws IOException {
+        Path filePath = Paths.get(BASE_PATH, "invalid_data.txt");
+        Files.writeString(filePath, "apply add", StandardCharsets.UTF_8);
+        createdFiles.add(filePath);
 
-        assertThrows(IllegalArgumentException.class, () -> CalculatorApp.processFile(filePath), "Expected IllegalArgumentException for invalid operation format");
+        assertThrows(NumberFormatException.class, () -> CalculatorApp.processFile(filePath.toString()),
+                "Expected NumberFormatException for invalid number format");
+    }
+
+    @Test
+    public void testInvalidOperation() throws IOException {
+        Path filePath = Paths.get(BASE_PATH, "invalid_operation.txt");
+        Files.writeString(filePath, "adddddd 125", StandardCharsets.UTF_8);
+        createdFiles.add(filePath);
+
+        assertThrows(IllegalArgumentException.class, () -> CalculatorApp.processFile(filePath.toString()),
+                "Expected IllegalArgumentException for invalid operation format");
     }
 }
